@@ -20,7 +20,15 @@ class NodeAddSectionMenuRoutes {
     ];
     $options = [
       '_node_operation_route' => TRUE,
-      'parameters' => ['node_type' => ['with_config_overrides' => TRUE]],
+      'parameters' => [
+        'node_type' => [
+          'with_config_overrides' => TRUE,
+        ],
+        'menu' => [
+          'type' => 'entity:menu',
+          'with_config_overrides' => TRUE,
+        ],
+      ],
     ];
     $routeCollection = new RouteCollection();
     foreach (array_keys(NodeType::loadMultiple()) as $nodeType) {
