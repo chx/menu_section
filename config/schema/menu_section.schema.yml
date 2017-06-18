@@ -1,0 +1,22 @@
+system.nenu.*.third_party.menu_section:
+  type: mapping
+  label: 'Menu section settings'
+  mapping:
+    uid:
+      type: int
+      label: 'User ID'
+menu_section.settings:
+  type: config_object
+  label: 'Menu section settings'
+  mapping:
+    section_types:
+      type: sequence
+      label: 'The node types that create a menu section.'
+      sequence:
+        type: string
+    allowed_types:
+      type: sequence
+      label: 'The node types that can go in a menu section.'
+      sequence:
+        type: string
+

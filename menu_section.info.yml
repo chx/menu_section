@@ -1,0 +1,7 @@
+name: Menu Section
+type: module
+description: 'Creates site sections with the menu.'
+package: menu
+core: 8.x
+dependencies:
+  - current_menu

@@ -1,0 +1,49 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\menu_section\NodeAddSectionMenuRoutes;
+use Drupal\node\NodeInterface;
+use Drupal\system\Entity\Menu;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function menu_section_node_insert(EntityInterface $entity) {
+  /** @var \Drupal\node\NodeInterface $entity */
+  if ($entity instanceof NodeInterface && in_array($entity->bundle(), \Drupal::config('menu_section.settings')->get('section_types'))) {
+    Menu::create([
+      'id' => preg_replace('/[^a-z0-9-]+/', '-', $entity->bundle()) . '--' . $entity->id(),
+      'label' => $entity->label(),
+      'third_party_settings' => ['menu_section' => ['uid' => $entity->getOwnerId()]],
+    ])->save();
+  }
+}
+
+function menu_section_form_node_form_alter($form, FormStateInterface $formState) {
+  /** @var NodeInterface $node */
+  $node = $formState->getFormObject()->getEntity();
+  /** @var \Drupal\node\NodeTypeInterface $nodeType */
+  $nodeType = $node->type->entity;
+  if (\Drupal::routeMatch()->getRouteName() == NodeAddSectionMenuRoutes::ROUTE_NAME_PREFIX . $nodeType->id()) {
+    $menu = \Drupal::routeMatch()->getRawParameter('menu');
+  }
+  if (empty($menu) && $node->id()) {
+    $query = \Drupal::entityQuery('menu_link_content')->condition('link.uri', 'entity:node/' . $node->id());
+    if ($available = $nodeType->getThirdPartySetting('menu_ui', 'available_menus', ['main'])) {
+      $query->condition('menu_name', array_values($available), 'NOT IN');
+    }
+    $linkIds = $query->execute();
+    if ($linkIds) {
+      $menu = MenuLinkContent::load(reset($linkIds))->getMenuName();
+    }
+  }
+  // menu_ui_form_node_form_alter() only cares about these settings so no
+  // need to store anything or a config overrider etc. It's enough to enforce
+  // the menu section name to the existing one if there's one.
+  if (!empty($menu)) {
+    $nodeType->setThirdPartySetting('menu_ui', 'available_menus', [$menu]);
+    $nodeType->setThirdPartySetting('menu_ui', 'parent', "$menu:");
+  }
+}

@@ -1,0 +1,6 @@
+services:
+  menu_section.access_check.node.add:
+    class: \Drupal\menu_section\Access\MenuSectionNodeAddAccessCheck
+    arguments: ['@entity.manager']
+    tags:
+      - { name: access_check, applies_to: _menu_section_node_add_access }

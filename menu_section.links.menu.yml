@@ -1,0 +1,6 @@
+menu_section.settings:
+  title: 'Menu section settings'
+  parent: system.admin_content
+  description: 'Configure menu sections.'
+  route_name: menu_section.settings
+  weight: -20
