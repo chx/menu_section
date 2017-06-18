@@ -16,7 +16,7 @@ class NodeAddSectionMenuRoutes {
       '_title_callback' => '\Drupal\node\Controller\NodeController::addPageTitle',
     ];
     $requirements = [
-      '_custom_access' => 'menu_section.access_check.node.add:access',
+      '_custom_access' => '\Drupal\menu_section\Access\MenuSectionNodeAddAccessCheck:access',
     ];
     $options = [
       '_node_operation_route' => TRUE,

@@ -4,11 +4,10 @@ namespace Drupal\menu_section\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\Access\NodeAddAccessCheck;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\MenuInterface;
 
-class MenuSectionNodeAddAccessCheck extends NodeAddAccessCheck {
+class MenuSectionNodeAddAccessCheck {
 
   public function access(AccountInterface $account, NodeTypeInterface $node_type = NULL, MenuInterface $menu = NULL) {
     if ($node_type && $menu) {
@@ -18,7 +17,7 @@ class MenuSectionNodeAddAccessCheck extends NodeAddAccessCheck {
         return AccessResult::allowed();
       }
     }
-    return parent::access($account, $node_type);
+    return \Drupal::service('access_check.node.add')->access($account, $node_type);
   }
 
 }
