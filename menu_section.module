@@ -12,7 +12,7 @@ use Drupal\system\Entity\Menu;
  */
 function menu_section_node_insert(EntityInterface $entity) {
   /** @var \Drupal\node\NodeInterface $entity */
-  if ($entity instanceof NodeInterface && in_array($entity->bundle(), \Drupal::config('menu_section.settings')->get('section_types'))) {
+  if (in_array($entity->bundle(), \Drupal::config('menu_section.settings')->get('section_types'))) {
     Menu::create([
       'id' => preg_replace('/[^a-z0-9-]+/', '-', $entity->bundle()) . '--' . $entity->id(),
       'label' => $entity->label(),
