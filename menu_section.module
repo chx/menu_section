@@ -21,7 +21,7 @@ function menu_section_node_insert(EntityInterface $entity) {
   }
 }
 
-function menu_section_form_node_form_alter($form, FormStateInterface $formState) {
+function menu_section_form_node_form_alter(&$form, FormStateInterface $formState) {
   /** @var NodeInterface $node */
   $node = $formState->getFormObject()->getEntity();
   /** @var \Drupal\node\NodeTypeInterface $nodeType */
@@ -43,7 +43,16 @@ function menu_section_form_node_form_alter($form, FormStateInterface $formState)
   // need to store anything or a config overrider etc. It's enough to enforce
   // the menu section name to the existing one if there's one.
   if (!empty($menu)) {
+    $form['#process'][] = 'menu_section_form_node_form_process';
     $nodeType->setThirdPartySetting('menu_ui', 'available_menus', [$menu]);
     $nodeType->setThirdPartySetting('menu_ui', 'parent', "$menu:");
   }
+}
+
+function menu_section_form_node_form_process($form) {
+  $form['menu']['enabled'] = ['#type' => 'value', '#value' => TRUE];
+  unset($form['menu']['link']['#states']);
+  $form['menu']['#open'] = TRUE;
+  $form['menu']['link']['title']['#required'] = TRUE;
+  return $form;
 }
