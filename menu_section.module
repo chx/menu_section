@@ -2,6 +2,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_section\MenuSectionFormNodeFormAlter;
 use Drupal\system\Entity\Menu;
 
@@ -11,10 +12,16 @@ use Drupal\system\Entity\Menu;
 function menu_section_node_insert(EntityInterface $entity) {
   /** @var \Drupal\node\NodeInterface $entity */
   if (in_array($entity->bundle(), \Drupal::config('menu_section.settings')->get('section_types'))) {
+    $menu_name = preg_replace('/[^a-z0-9-]+/', '-', $entity->bundle()) . '--' . $entity->id();
     Menu::create([
-      'id' => preg_replace('/[^a-z0-9-]+/', '-', $entity->bundle()) . '--' . $entity->id(),
+      'id' => $menu_name,
       'label' => $entity->label(),
       'third_party_settings' => ['menu_section' => ['uid' => $entity->getOwnerId()]],
+    ])->save();
+    MenuLinkContent::create([
+      'link' => [['uri' => 'entity:node/' . $entity->id()]],
+      'title' => t('Home'),
+      'menu_name' => $menu_name,
     ])->save();
   }
 }
