@@ -1,0 +1,9 @@
+services:
+  menu_section.theme_negotiator:
+    class: Drupal\menu_section\Theme\MenuSectionThemeNegotiator
+    arguments: ['@menu_section.helper', '@theme_handler', '@config.factory']
+    tags:
+        - { name: theme_negotiator, priority: 200 }
+  menu_section.helper:
+      class: Drupal\menu_section\Theme\MenuSectionHelper
+      arguments: ['@cache_context.current_menu', '@config.factory']

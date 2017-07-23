@@ -19,4 +19,6 @@ menu_section.settings:
       label: 'The node types that can go in a menu section.'
       sequence:
         type: string
-
+    theme_prefix;
+      type: string
+      label: 'Prefix for theme based on the current section.'
