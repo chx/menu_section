@@ -28,7 +28,7 @@ class MenuSectionHelper {
    * @return FALSE|string
    */
   public function getSection() {
-    if (preg_match('^(?<section>.*)(--\d+)$', $this->cacheContext->getContext(), $matches)) {
+    if (preg_match('/^(?<section>.*)(--\d+)$/', $this->cacheContext->getContext(), $matches)) {
       foreach ($this->configFactory->get('menu_section.settings')->get('section_types') as $type) {
         if (preg_replace('/[^a-z0-9-]+/', '-', $type) === $matches['section']) {
           return $matches['section'];
