@@ -2,7 +2,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_section\MenuSectionFormNodeFormAlter;
 use Drupal\system\Entity\Menu;
 
@@ -17,11 +16,6 @@ function menu_section_node_insert(EntityInterface $entity) {
       'id' => $menu_name,
       'label' => $entity->label(),
       'third_party_settings' => ['menu_section' => ['uid' => $entity->getOwnerId()]],
-    ])->save();
-    MenuLinkContent::create([
-      'link' => [['uri' => 'entity:node/' . $entity->id()]],
-      'title' => t('Home'),
-      'menu_name' => $menu_name,
     ])->save();
   }
 }
